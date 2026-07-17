@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__sql__list_connections",
+      "mcp__claude-in-chrome__tabs_context_mcp",
+      "PowerShell(Get-Content -Raw \"D:\\\\Novo Volume \\(G\\)\\\\00 -Projeto S Mademan 3\\\\00 - Agg de bolso\\\\supabase\\\\migrations\\\\APLICAR_TUDO.sql\" -Encoding UTF8 | Set-Clipboard; \"Copiado: $\\(\\(Get-Clipboard | Measure-Object -Line\\).Lines\\) linhas\")",
+      "PowerShell(Start-Process \"https://supabase.com/dashboard/project/pndcwchwndybmojbywpx/sql/new\")",
+      "Bash(npm --version)",
+      "Bash(git --version)",
+      "Bash(echo \"git: $\\(git --version 2>/dev/null || echo 'não instalado'\\)\")",
+      "Bash(npm install *)",
+      "Bash(npx tsc *)",
+      "Bash(echo \"tsc exit: $?\")",
+      "Bash(curl -s -X POST https://pndcwchwndybmojbywpx.supabase.co/auth/v1/signup -H 'apikey: sb_publishable_bhn4XI6PlyPevh4XRtSYAQ_n0cldI45' -H 'Content-Type: application/json' -d '{\"email\":\"teste.agg.bolso@gmail.com\",\"password\":\"TesteAgg2026!\",\"data\":{\"full_name\":\"Conta de Teste\"}}')",
+      "Bash(echo \"exit: $?\")",
+      "Bash(node \"C:\\\\Users\\\\MARCUS~1.RAB\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\D--Novo-Volume--G--00--Projeto-S-Mademan-3-00---Agg-de-bolso\\\\9bd58baf-7594-428c-b65b-19f225aeee3b\\\\scratchpad\\\\test-fluxo.mjs\")",
+      "Bash(gh --version)",
+      "Bash(gh auth *)",
+      "Bash(node -e ' *)",
+      "Bash(npm run *)"
+    ]
+  }
+}
