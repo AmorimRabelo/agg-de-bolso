@@ -34,7 +34,9 @@ export function SignupPage() {
     if (error) {
       const msg = error.message.includes('already registered')
         ? 'Este e-mail já possui uma conta'
-        : 'Não foi possível criar a conta. Tente novamente.'
+        : error.message.includes('rate limit')
+          ? 'Muitos cadastros neste momento. Aguarde 1 hora e tente de novo.'
+          : 'Não foi possível criar a conta. Tente novamente.'
       toast(msg, 'error')
       return
     }

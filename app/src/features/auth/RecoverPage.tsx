@@ -18,7 +18,12 @@ export function RecoverPage() {
     })
     setLoading(false)
     if (error) {
-      toast('Não foi possível enviar o e-mail. Tente novamente.', 'error')
+      toast(
+        error.message.includes('rate limit')
+          ? 'Limite de e-mails atingido. Aguarde 1 hora e tente de novo.'
+          : 'Não foi possível enviar o e-mail. Tente novamente.',
+        'error',
+      )
       return
     }
     setSent(true)
