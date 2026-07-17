@@ -17,7 +17,16 @@
       "Bash(gh --version)",
       "Bash(gh auth *)",
       "Bash(node -e ' *)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(git remote *)",
+      "Bash(git push *)",
+      "PowerShell(Start-Process \"https://github.com/new?name=agg-de-bolso&description=App+de+controle+de+emprestimos+\\(PWA+%2B+Supabase\\)&visibility=public\")",
+      "PowerShell(Start-Process \"https://github.com/AmorimRabelo/agg-de-bolso/settings/pages\")",
+      "Bash(git commit --allow-empty -m 'Dispara primeira publicação no GitHub Pages *)",
+      "PowerShell(Start-Process \"https://supabase.com/dashboard/project/pndcwchwndybmojbywpx/auth/url-configuration\")",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" \"https://amorimrabelo.github.io/agg-de-bolso/\")",
+      "Bash(curl -s \"https://pndcwchwndybmojbywpx.supabase.co/auth/v1/settings\" -H \"apikey: sb_publishable_bhn4XI6PlyPevh4XRtSYAQ_n0cldI45\")",
+      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\).on\\('end',\\(\\)=>{const j=JSON.parse\\(d\\);console.log\\('cadastro_desabilitado:',j.disable_signup\\);console.log\\('confirmacao_email_dispensada \\(autoconfirm\\):',j.mailer_autoconfirm\\)}\\)\")"
     ]
   }
 }
