@@ -8,7 +8,31 @@ import type { Receivable } from '../loans/types'
 import { useSettings } from '../settings/hooks'
 import { hasAccess, trialDaysLeft } from '../subscription/service'
 import { useIsAdmin, useSubscription } from '../subscription/hooks'
+import { useOverdue } from '../notifications/hooks'
 import { useDashboardStats, useLate, useRecentPayments, useUpcoming } from './hooks'
+
+function NotificationBell() {
+  const navigate = useNavigate()
+  const { data: overdue } = useOverdue()
+  const count = (overdue ?? []).length
+  return (
+    <button
+      onClick={() => navigate('/notificacoes')}
+      className="relative rounded-2xl bg-white/10 p-3 active:bg-white/20"
+      aria-label="Cobranças em atraso"
+    >
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+        <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+      </svg>
+      {count > 0 && (
+        <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[11px] font-bold text-white">
+          {count > 99 ? '99+' : count}
+        </span>
+      )}
+    </button>
+  )
+}
 
 function TrialBanner() {
   const navigate = useNavigate()
@@ -93,11 +117,14 @@ export function HomePage() {
               {s ? formatBRL(toCents(s.pending_total)) : '—'}
             </p>
           </div>
-          <div className="rounded-2xl bg-white/10 px-4 py-3 text-right">
-            <p className="text-xs text-brand-200">Rentabilidade</p>
-            <p className="text-xl font-extrabold text-brand-400">
-              {s ? formatPct(s.portfolio_return_pct) : '—'}
-            </p>
+          <div className="flex items-center gap-3">
+            <div className="rounded-2xl bg-white/10 px-4 py-3 text-right">
+              <p className="text-xs text-brand-200">Rentabilidade</p>
+              <p className="text-xl font-extrabold text-brand-400">
+                {s ? formatPct(s.portfolio_return_pct) : '—'}
+              </p>
+            </div>
+            <NotificationBell />
           </div>
         </div>
       </header>

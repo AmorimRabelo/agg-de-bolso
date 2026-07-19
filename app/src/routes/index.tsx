@@ -18,6 +18,7 @@ import { ReportsPage } from '../features/reports/ReportsPage'
 import { SubscriptionGate } from '../features/subscription/SubscriptionGate'
 import { SubscriptionPage } from '../features/subscription/SubscriptionPage'
 import { AdminPage } from '../features/subscription/AdminPage'
+import { NotificationsPage } from '../features/notifications/NotificationsPage'
 import { AppLayout } from './AppLayout'
 import { Splash } from '../shared/components/ui'
 
@@ -120,6 +121,7 @@ function RouterTree() {
           <Route path="/emprestimos/:id" element={<LoanDetailPage />} />
           <Route path="/relatorios" element={<ReportsPage />} />
           <Route path="/ajustes" element={<SettingsPage />} />
+          <Route path="/notificacoes" element={<NotificationsPage />} />
           <Route path="/assinatura" element={<SubscriptionPage />} />
           <Route path="/admin" element={<AdminPage />} />
         </Route>
