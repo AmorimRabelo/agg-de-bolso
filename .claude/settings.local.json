@@ -31,7 +31,18 @@
       "Bash(curl -s \"https://api.github.com/repos/AmorimRabelo/agg-de-bolso/actions/runs?per_page=1\")",
       "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\).on\\('end',\\(\\)=>{const r=JSON.parse\\(d\\).workflow_runs[0];console.log\\(r.status, '/', r.conclusion||'em andamento'\\)}\\)\")",
       "Bash(echo \"— Configurações atuais:\")",
-      "Bash(curl -s https://pndcwchwndybmojbywpx.supabase.co/auth/v1/settings -H 'apikey: sb_publishable_bhn4XI6PlyPevh4XRtSYAQ_n0cldI45')"
+      "Bash(curl -s https://pndcwchwndybmojbywpx.supabase.co/auth/v1/settings -H 'apikey: sb_publishable_bhn4XI6PlyPevh4XRtSYAQ_n0cldI45')",
+      "PowerShell(Start-Process \"https://supabase.com/dashboard/project/pndcwchwndybmojbywpx/auth/providers\")",
+      "WebSearch",
+      "WebFetch(domain:play.google.com)",
+      "Read(//c/Program Files \\\\\\(x86\\\\\\)/Microsoft/Edge/Application/**)",
+      "Read(//c/Program Files/Microsoft/Edge/Application/**)",
+      "PowerShell(Start-Process \"D:\\\\Novo Volume \\(G\\)\\\\00 -Projeto S Mademan 3\\\\00 - Agg de bolso\\\\Agg de Bolso - Plano de Custos e Retorno.pdf\")",
+      "PowerShell(Set-Clipboard)",
+      "PowerShell(\"SQL copiado e editor aberto\")",
+      "Bash(node \"C:\\\\Users\\\\MARCUS~1.RAB\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\D--Novo-Volume--G--00--Projeto-S-Mademan-3-00---Agg-de-bolso\\\\9bd58baf-7594-428c-b65b-19f225aeee3b\\\\scratchpad\\\\test-parcelas.mjs\")",
+      "PowerShell(Stop-Process -Id 22136 -Force -Confirm:$false)",
+      "PowerShell(\"processo encerrado\")"
     ]
   }
 }

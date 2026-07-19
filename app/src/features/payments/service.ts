@@ -3,8 +3,14 @@ import type { Payment, PaymentInput } from './types'
 
 function friendly(error: { code?: string; message: string }): Error {
   const m = error.message ?? ''
+  if (m.includes('excede o principal pendente da parcela'))
+    return new Error('O principal informado é maior que o pendente desta parcela')
   if (m.includes('excede o principal'))
     return new Error('O principal informado é maior que o principal pendente')
+  if (m.includes('Informe a parcela'))
+    return new Error('Escolha a parcela deste pagamento')
+  if (m.includes('parcela não aceita'))
+    return new Error('Esta parcela já está paga ou cancelada')
   if (m.includes('não aceita pagamentos'))
     return new Error('Este empréstimo está cancelado e não aceita pagamentos')
   if (m.includes('quitado')) return new Error('Este empréstimo já está quitado')

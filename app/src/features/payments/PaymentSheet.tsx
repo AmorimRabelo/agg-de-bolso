@@ -3,21 +3,35 @@ import { PAYMENT_METHODS, type PaymentMethod } from '../../core/constants'
 import { todayISO } from '../../core/format'
 import { formatBRL, fromCents, maskMoneyInput, toCents } from '../../core/money'
 import { Button, Input, useToast } from '../../shared/components/ui'
-import type { LoanStats } from '../loans/types'
+import type { InstallmentStats, LoanStats } from '../loans/types'
 import { useCreatePayment } from './hooks'
 
 /**
- * Bottom sheet de novo pagamento.
- * O usuário informa o TOTAL e os JUROS; o principal é calculado (total - juros).
- * Regra de ouro validada aqui e garantida pelo banco: principal + juros = total.
+ * Bottom sheet de novo pagamento — para o empréstimo (único) ou para uma
+ * parcela específica (parcelado). O usuário informa o TOTAL e os JUROS;
+ * o principal é calculado. Regra de ouro garantida pelo banco:
+ * principal + juros = total.
  */
-export function PaymentSheet({ loan, onClose }: { loan: LoanStats; onClose: () => void }) {
+export function PaymentSheet({
+  loan,
+  installment,
+  onClose,
+}: {
+  loan: LoanStats
+  installment?: InstallmentStats
+  onClose: () => void
+}) {
   const toast = useToast()
   const create = useCreatePayment()
 
-  const pendingTotal = toCents(loan.pending_total)
-  const pendingPrincipal = toCents(loan.pending_principal)
-  const pendingInterest = toCents(loan.pending_interest)
+  const pendingTotal = toCents(installment ? installment.pending_total : loan.pending_total)
+  const pendingPrincipal = toCents(
+    installment ? installment.pending_principal : loan.pending_principal,
+  )
+  const pendingInterest = toCents(
+    installment ? installment.pending_interest : loan.pending_interest,
+  )
+  const lateCharge = installment ? toCents(installment.suggested_late_charge) : 0
 
   const [date, setDate] = useState(todayISO())
   const [totalCents, setTotalCents] = useState(0)
@@ -29,17 +43,11 @@ export function PaymentSheet({ loan, onClose }: { loan: LoanStats; onClose: () =
 
   const principalCents = totalCents - interestCents
 
-  function fillFull() {
-    setTotalCents(pendingTotal)
-    setTotalDisplay(formatBRL(pendingTotal))
-    setInterestCents(pendingInterest)
-    setInterestDisplay(formatBRL(pendingInterest))
-  }
-  function fillInterestOnly() {
-    setTotalCents(pendingInterest)
-    setTotalDisplay(formatBRL(pendingInterest))
-    setInterestCents(pendingInterest)
-    setInterestDisplay(formatBRL(pendingInterest))
+  function fill(total: number, interest: number) {
+    setTotalCents(total)
+    setTotalDisplay(total ? formatBRL(total) : '')
+    setInterestCents(interest)
+    setInterestDisplay(interest ? formatBRL(interest) : '')
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -55,6 +63,7 @@ export function PaymentSheet({ loan, onClose }: { loan: LoanStats; onClose: () =
     try {
       await create.mutateAsync({
         loan_id: loan.id,
+        installment_id: installment?.id ?? null,
         payment_date: date,
         total_amount: fromCents(totalCents),
         principal_amount: fromCents(principalCents),
@@ -72,26 +81,59 @@ export function PaymentSheet({ loan, onClose }: { loan: LoanStats; onClose: () =
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-ink/40 backdrop-blur-sm">
       <div className="anim-fade-up max-h-[92dvh] w-full max-w-md overflow-y-auto rounded-t-3xl bg-white p-6 pb-10">
-        <h2 className="text-lg font-bold">Registrar pagamento</h2>
+        <h2 className="text-lg font-bold">
+          {installment
+            ? `Receber parcela ${installment.number}/${loan.num_installments}`
+            : 'Registrar pagamento'}
+        </h2>
         <p className="mt-0.5 text-sm text-ink/60">
-          Empréstimo #{loan.loan_number} · saldo {formatBRL(pendingTotal)}
+          Empréstimo #{loan.loan_number} · pendente {formatBRL(pendingTotal)}
+          {lateCharge > 0 && (
+            <span className="font-semibold text-red-600">
+              {' '}
+              + {formatBRL(lateCharge)} de multa/mora
+            </span>
+          )}
         </p>
 
         <div className="mt-4 flex gap-2">
-          <button
-            type="button"
-            onClick={fillFull}
-            className="flex-1 rounded-2xl border border-brand-200 bg-brand-50 py-2 text-sm font-semibold text-brand-800"
-          >
-            Quitar tudo
-          </button>
-          <button
-            type="button"
-            onClick={fillInterestOnly}
-            className="flex-1 rounded-2xl border border-brand-200 bg-brand-50 py-2 text-sm font-semibold text-brand-800"
-          >
-            Só os juros
-          </button>
+          {installment ? (
+            <>
+              <button
+                type="button"
+                onClick={() => fill(pendingTotal, pendingInterest)}
+                className="flex-1 rounded-2xl border border-brand-200 bg-brand-50 py-2 text-sm font-semibold text-brand-800"
+              >
+                Valor da parcela
+              </button>
+              {lateCharge > 0 && (
+                <button
+                  type="button"
+                  onClick={() => fill(pendingTotal + lateCharge, pendingInterest + lateCharge)}
+                  className="flex-1 rounded-2xl border border-red-200 bg-red-50 py-2 text-sm font-semibold text-red-700"
+                >
+                  Com multa e mora
+                </button>
+              )}
+            </>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={() => fill(pendingTotal, pendingInterest)}
+                className="flex-1 rounded-2xl border border-brand-200 bg-brand-50 py-2 text-sm font-semibold text-brand-800"
+              >
+                Quitar tudo
+              </button>
+              <button
+                type="button"
+                onClick={() => fill(pendingInterest, pendingInterest)}
+                className="flex-1 rounded-2xl border border-brand-200 bg-brand-50 py-2 text-sm font-semibold text-brand-800"
+              >
+                Só os juros
+              </button>
+            </>
+          )}
         </div>
 
         <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-4">
@@ -123,7 +165,7 @@ export function PaymentSheet({ loan, onClose }: { loan: LoanStats; onClose: () =
               setInterestDisplay(display)
               setInterestCents(cents)
             }}
-            hint={`Juros pendentes: ${formatBRL(pendingInterest)}`}
+            hint={`Juros pendentes: ${formatBRL(pendingInterest)}${lateCharge > 0 ? ' · multa/mora entram como juros extras' : ''}`}
           />
 
           <div className="rounded-2xl bg-brand-50 p-4 text-sm">

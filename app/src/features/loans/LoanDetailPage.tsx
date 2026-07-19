@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { LOAN_STATUS, TRAFFIC_LIGHT } from '../../core/constants'
+import { INSTALLMENT_STATUS, LOAN_STATUS, PERIODICITY, TRAFFIC_LIGHT } from '../../core/constants'
 import { formatDate } from '../../core/format'
 import { formatBRL, formatPct, toCents } from '../../core/money'
 import { Button, Card, useToast } from '../../shared/components/ui'
-import { useCancelLoan, useLoan } from './hooks'
+import { useCancelLoan, useInstallments, useLoan } from './hooks'
+import type { InstallmentStats } from './types'
 import { PaymentList } from '../payments/PaymentList'
 import { PaymentSheet } from '../payments/PaymentSheet'
 
@@ -13,9 +14,11 @@ export function LoanDetailPage() {
   const navigate = useNavigate()
   const toast = useToast()
   const { data: l, isLoading } = useLoan(id)
+  const { data: installments } = useInstallments(id)
   const cancel = useCancelLoan()
   const [showCancel, setShowCancel] = useState(false)
   const [showPayment, setShowPayment] = useState(false)
+  const [payInstallment, setPayInstallment] = useState<InstallmentStats | null>(null)
   const [reason, setReason] = useState('')
 
   if (isLoading || !l) {
@@ -70,10 +73,17 @@ export function LoanDetailPage() {
         </button>
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="text-sm text-brand-200">Empréstimo #{l.loan_number}</p>
+            <p className="text-sm text-brand-200">
+              Empréstimo #{l.loan_number}
+              {l.loan_type === 'parcelado' &&
+                ` · ${l.num_installments}x ${PERIODICITY[l.periodicity ?? 'mensal'].toLowerCase()}`}
+            </p>
             <h1 className="text-2xl font-extrabold">{l.client_name}</h1>
             <p className="mt-0.5 text-sm text-brand-200">
-              {formatDate(l.loan_date)} → vence {formatDate(l.due_date)}
+              {formatDate(l.loan_date)} →{' '}
+              {l.loan_type === 'parcelado'
+                ? `próx. venc. ${formatDate(l.next_due ?? l.due_date)}`
+                : `vence ${formatDate(l.due_date)}`}
             </p>
           </div>
           <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${badge.color}`}>
@@ -123,6 +133,57 @@ export function LoanDetailPage() {
           </Card>
         )}
 
+        {l.loan_type === 'parcelado' && (installments ?? []).length > 0 && (
+          <>
+            <h2 className="mt-5 font-bold">Parcelas</h2>
+            <Card className="mt-3 !p-2">
+              {installments!.map((p) => {
+                const badge = INSTALLMENT_STATUS[p.effective_status]
+                const light = TRAFFIC_LIGHT[p.traffic_light]
+                const pending = toCents(p.pending_total)
+                const charge = toCents(p.suggested_late_charge)
+                const open = !['paga', 'cancelada'].includes(p.effective_status)
+                return (
+                  <div
+                    key={p.id}
+                    className="flex items-center justify-between gap-2 border-b border-ink/5 px-3 py-2.5 last:border-0"
+                  >
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold">
+                        {p.number}ª · {formatDate(p.due_date)}{' '}
+                        <span className={`ml-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ${badge.color}`}>
+                          {light.emoji && `${light.emoji} `}
+                          {badge.label}
+                        </span>
+                      </p>
+                      <p className="text-xs text-ink/50">
+                        {open ? (
+                          <>
+                            Pendente <strong>{formatBRL(pending)}</strong>
+                            {charge > 0 && (
+                              <span className="text-red-600"> + {formatBRL(charge)} multa/mora</span>
+                            )}
+                          </>
+                        ) : (
+                          <>Valor {formatBRL(toCents(p.total_amount))}</>
+                        )}
+                      </p>
+                    </div>
+                    {open && isOpen && (
+                      <button
+                        onClick={() => setPayInstallment(p)}
+                        className="shrink-0 rounded-2xl bg-brand-700 px-3.5 py-2 text-xs font-semibold text-white active:bg-brand-800"
+                      >
+                        Receber
+                      </button>
+                    )}
+                  </div>
+                )
+              })}
+            </Card>
+          </>
+        )}
+
         <h2 className="mt-5 font-bold">Pagamentos</h2>
         <div className="mt-3">
           <PaymentList loanId={l.id} canCancel={l.status !== 'cancelado'} />
@@ -131,7 +192,9 @@ export function LoanDetailPage() {
         <div className="mt-5 flex flex-col gap-3">
           {isOpen && (
             <>
-              <Button onClick={() => setShowPayment(true)}>Registrar pagamento</Button>
+              {l.loan_type === 'unico' && (
+                <Button onClick={() => setShowPayment(true)}>Registrar pagamento</Button>
+              )}
               <Button variant="ghost" onClick={() => setShowCancel(true)}>
                 <span className="text-red-600">Cancelar empréstimo</span>
               </Button>
@@ -141,6 +204,13 @@ export function LoanDetailPage() {
       </div>
 
       {showPayment && <PaymentSheet loan={l} onClose={() => setShowPayment(false)} />}
+      {payInstallment && (
+        <PaymentSheet
+          loan={l}
+          installment={payInstallment}
+          onClose={() => setPayInstallment(null)}
+        />
+      )}
 
       {showCancel && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-ink/40 backdrop-blur-sm">

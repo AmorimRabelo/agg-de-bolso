@@ -1,5 +1,5 @@
 import { supabase } from '../../core/supabase'
-import type { Loan, LoanInput, LoanStats } from './types'
+import type { InstallmentStats, Loan, LoanInput, LoanStats } from './types'
 
 function friendly(error: { code?: string; message: string }): Error {
   // Mensagens levantadas pelos triggers do banco chegam em message
@@ -72,6 +72,17 @@ export const loansService = {
       .single()
     if (error) throw friendly(error)
     return data as Loan
+  },
+
+  /** Parcelas de um empréstimo (geradas pelo banco), com cálculos. */
+  async listInstallments(loanId: string): Promise<InstallmentStats[]> {
+    const { data, error } = await supabase
+      .from('installment_stats')
+      .select('*')
+      .eq('loan_id', loanId)
+      .order('number')
+    if (error) throw friendly(error)
+    return data as InstallmentStats[]
   },
 
   /** Cancelamento (nunca exclusão) — o banco exige motivo e audita. */

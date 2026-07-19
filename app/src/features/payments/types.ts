@@ -20,6 +20,7 @@ export interface Payment {
 
 export interface PaymentInput {
   loan_id: string
+  installment_id?: string | null
   payment_date: string
   total_amount: number
   principal_amount: number

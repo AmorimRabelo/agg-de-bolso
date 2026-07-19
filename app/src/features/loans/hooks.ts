@@ -14,6 +14,14 @@ export function useLoansByClient(clientId: string | undefined) {
   })
 }
 
+export function useInstallments(loanId: string | undefined) {
+  return useQuery({
+    queryKey: ['loans', loanId, 'installments'],
+    queryFn: () => loansService.listInstallments(loanId!),
+    enabled: !!loanId,
+  })
+}
+
 export function useLoan(id: string | undefined) {
   return useQuery({
     queryKey: ['loans', id],

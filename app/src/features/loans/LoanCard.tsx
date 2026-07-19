@@ -17,6 +17,11 @@ export function LoanCard({ loan, hideClient = false }: { loan: LoanStats; hideCl
         <div className="min-w-0">
           <p className="truncate font-semibold">
             {hideClient ? `Empréstimo #${loan.loan_number}` : loan.client_name}
+            {loan.loan_type === 'parcelado' && (
+              <span className="ml-1.5 rounded-full bg-brand-50 px-2 py-0.5 text-[10px] font-semibold text-brand-800">
+                {loan.num_installments}x
+              </span>
+            )}
           </p>
           <p className="text-xs text-ink/40">
             {hideClient ? formatDate(loan.loan_date) : `#${loan.loan_number} · ${formatDate(loan.loan_date)}`}
@@ -45,7 +50,12 @@ export function LoanCard({ loan, hideClient = false }: { loan: LoanStats; hideCl
       </div>
       {loan.effective_status !== 'pago' && loan.effective_status !== 'cancelado' && (
         <p className="mt-2 text-xs text-ink/50">
-          Vencimento: <strong>{formatDate(loan.due_date)}</strong>
+          {loan.loan_type === 'parcelado' ? 'Próx. vencimento: ' : 'Vencimento: '}
+          <strong>
+            {formatDate(
+              loan.loan_type === 'parcelado' ? (loan.next_due ?? loan.due_date) : loan.due_date,
+            )}
+          </strong>
           {loan.days_late > 0 && (
             <span className="font-semibold text-red-600"> · {loan.days_late} dia{loan.days_late === 1 ? '' : 's'} de atraso</span>
           )}

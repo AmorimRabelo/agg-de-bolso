@@ -2,3 +2,9 @@ node_modules/
 dist/
 *.local
 .DS_Store
+
+# Documentos confidenciais — nunca publicar no repositório público
+PROJETO-INVESTIDOR.md
+PLANO-CUSTOS-E-RETORNO.md
+ROADMAP-PRODUTO.md
+*.pdf

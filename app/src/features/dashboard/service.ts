@@ -1,5 +1,5 @@
 import { supabase } from '../../core/supabase'
-import type { LoanStats } from '../loans/types'
+import type { Receivable } from '../loans/types'
 import type { PaymentMethod } from '../../core/constants'
 
 export interface DashboardStats {
@@ -66,27 +66,27 @@ export const dashboardService = {
     return data as unknown as RecentPayment[]
   },
 
-  /** Próximos vencimentos (em dia, ordenados pela data). */
-  async upcoming(): Promise<LoanStats[]> {
+  /** Próximos vencimentos — empréstimos únicos E parcelas, em dia. */
+  async upcoming(): Promise<Receivable[]> {
     const { data, error } = await supabase
-      .from('loan_stats')
+      .from('receivables')
       .select('*')
-      .in('effective_status', ['em_aberto', 'parcial'])
+      .eq('days_late', 0)
       .order('due_date', { ascending: true })
       .limit(5)
     if (error) throw new Error('Não foi possível carregar os vencimentos')
-    return data as LoanStats[]
+    return data as Receivable[]
   },
 
-  /** Empréstimos atrasados (piores primeiro). */
-  async late(): Promise<LoanStats[]> {
+  /** Atrasados — empréstimos únicos E parcelas (piores primeiro). */
+  async late(): Promise<Receivable[]> {
     const { data, error } = await supabase
-      .from('loan_stats')
+      .from('receivables')
       .select('*')
-      .eq('effective_status', 'atrasado')
+      .gt('days_late', 0)
       .order('days_late', { ascending: false })
       .limit(5)
     if (error) throw new Error('Não foi possível carregar os atrasados')
-    return data as LoanStats[]
+    return data as Receivable[]
   },
 }

@@ -1,12 +1,39 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { PAYMENT_METHODS } from '../../core/constants'
+import { PAYMENT_METHODS, TRAFFIC_LIGHT } from '../../core/constants'
 import { firstName, formatDate } from '../../core/format'
 import { formatBRL, formatPct, toCents } from '../../core/money'
 import { Card } from '../../shared/components/ui'
 import { useAuth } from '../auth/useAuth'
-import { LoanCard } from '../loans/LoanCard'
+import type { Receivable } from '../loans/types'
 import { useSettings } from '../settings/hooks'
 import { useDashboardStats, useLate, useRecentPayments, useUpcoming } from './hooks'
+
+function ReceivableRow({ item }: { item: Receivable }) {
+  const navigate = useNavigate()
+  const light = TRAFFIC_LIGHT[item.traffic_light]
+  return (
+    <Card onClick={() => navigate(`/emprestimos/${item.loan_id}`)} className="!p-4">
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <p className="truncate text-sm font-semibold">{item.client_name}</p>
+          <p className="text-xs text-ink/50">
+            #{item.loan_number}
+            {item.kind === 'parcela' && ` · parcela ${item.installment_number}`}
+            {' · vence '}
+            {formatDate(item.due_date)}
+            {item.days_late > 0 && (
+              <span className="font-semibold text-red-600"> · {item.days_late}d de atraso</span>
+            )}
+          </p>
+        </div>
+        <p className="shrink-0 font-bold">
+          {light.emoji && `${light.emoji} `}
+          {formatBRL(toCents(item.amount))}
+        </p>
+      </div>
+    </Card>
+  )
+}
 
 export function HomePage() {
   const { session } = useAuth()
@@ -93,25 +120,25 @@ export function HomePage() {
           </Card>
         )}
 
-        {/* atrasados */}
+        {/* atrasados (empréstimos e parcelas) */}
         {(late ?? []).length > 0 && (
           <>
-            <h2 className="mt-6 font-bold text-red-600">⚠️ Empréstimos atrasados</h2>
+            <h2 className="mt-6 font-bold text-red-600">⚠️ Atrasados</h2>
             <div className="mt-3 flex flex-col gap-3">
-              {late!.map((l) => (
-                <LoanCard key={l.id} loan={l} />
+              {late!.map((r) => (
+                <ReceivableRow key={r.installment_id ?? r.loan_id} item={r} />
               ))}
             </div>
           </>
         )}
 
-        {/* próximos vencimentos */}
+        {/* próximos vencimentos (empréstimos e parcelas) */}
         {(upcoming ?? []).length > 0 && (
           <>
             <h2 className="mt-6 font-bold">📅 Próximos vencimentos</h2>
             <div className="mt-3 flex flex-col gap-3">
-              {upcoming!.map((l) => (
-                <LoanCard key={l.id} loan={l} />
+              {upcoming!.map((r) => (
+                <ReceivableRow key={r.installment_id ?? r.loan_id} item={r} />
               ))}
             </div>
           </>

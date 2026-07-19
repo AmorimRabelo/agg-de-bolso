@@ -7,12 +7,16 @@ export interface UserSettings {
   default_interest_rate: number | string
   theme: string
   currency: string
+  late_fine_pct: number | string
+  late_interest_month_pct: number | string
 }
 
 export interface SettingsInput {
   company_name: string | null
   default_interest_rate: number
   theme: string
+  late_fine_pct: number
+  late_interest_month_pct: number
 }
 
 export const settingsService = {
