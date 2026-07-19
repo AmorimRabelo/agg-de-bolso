@@ -25,6 +25,13 @@ function maskPhone(raw: string): string {
   return d.replace(/(\d{2})(\d)/, '($1) $2').replace(/(\d{5})(\d{1,4})$/, '$1-$2')
 }
 
+// Contact Picker API — abre a lista de contatos do celular (Android/Chrome).
+// No iPhone o navegador ainda não oferece esse recurso: o botão nem aparece.
+type PickedContact = { name?: string[]; tel?: string[] }
+type ContactsNavigator = Navigator & {
+  contacts?: { select(props: string[], opts?: { multiple?: boolean }): Promise<PickedContact[]> }
+}
+
 export function ClientFormPage() {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -48,6 +55,28 @@ export function ClientFormPage() {
     setNotes(existing.notes ?? '')
     setStatus(existing.status)
   }, [existing])
+
+  const contactsSupported =
+    typeof (navigator as ContactsNavigator).contacts?.select === 'function'
+
+  async function pickContact() {
+    try {
+      const nav = navigator as ContactsNavigator
+      const picked = await nav.contacts!.select(['name', 'tel'], { multiple: false })
+      const contact = picked?.[0]
+      if (!contact) return
+      if (contact.name?.[0]) setName(contact.name[0])
+      // normaliza: só dígitos, remove o +55 do Brasil se vier junto
+      const tel = (contact.tel?.[0] ?? '').replace(/\D/g, '').replace(/^55(?=\d{10,11}$)/, '')
+      if (tel) {
+        setPhone(maskPhone(tel))
+        setWhatsapp(maskPhone(tel))
+      }
+      toast('Contato importado — confira e complete o cadastro ✅')
+    } catch {
+      /* usuário cancelou o seletor — nada a fazer */
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -73,6 +102,16 @@ export function ClientFormPage() {
         ‹ Voltar
       </button>
       <h1 className="text-2xl font-extrabold">{id ? 'Editar cliente' : 'Novo cliente'}</h1>
+
+      {!id && contactsSupported && (
+        <button
+          type="button"
+          onClick={pickContact}
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-brand-300 bg-brand-50 py-3 text-sm font-semibold text-brand-800 active:bg-brand-100"
+        >
+          📇 Preencher com um contato do celular
+        </button>
+      )}
 
       <form onSubmit={handleSubmit} className="mt-5 flex flex-col gap-4 pb-8">
         <Input
