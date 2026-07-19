@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { supabase } from '../../core/supabase'
 import { useAuth } from '../auth/useAuth'
 import { Button, Card, Input, useToast } from '../../shared/components/ui'
+import { useIsAdmin } from '../subscription/hooks'
 import { useSaveSettings, useSettings } from './hooks'
 
 export function SettingsPage() {
   const { session } = useAuth()
   const toast = useToast()
   const { data: settings } = useSettings()
+  const { data: isAdmin } = useIsAdmin()
   const save = useSaveSettings()
 
   const [company, setCompany] = useState('')
@@ -57,6 +60,21 @@ export function SettingsPage() {
         <p className="text-sm text-ink/50">Conectado como</p>
         <p className="font-semibold">{session?.user.email}</p>
       </Card>
+
+      <Link to="/assinatura">
+        <Card className="mt-3 flex items-center justify-between">
+          <p className="font-semibold">💳 Minha assinatura</p>
+          <span className="text-ink/30">›</span>
+        </Card>
+      </Link>
+      {isAdmin && (
+        <Link to="/admin">
+          <Card className="mt-3 flex items-center justify-between !bg-brand-50">
+            <p className="font-semibold">🛠 Painel de assinantes</p>
+            <span className="text-ink/30">›</span>
+          </Card>
+        </Link>
+      )}
 
       <form onSubmit={handleSave} className="mt-4 flex flex-col gap-4">
         <Input

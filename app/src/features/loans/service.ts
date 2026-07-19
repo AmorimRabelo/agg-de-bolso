@@ -4,6 +4,8 @@ import type { InstallmentStats, Loan, LoanInput, LoanStats } from './types'
 function friendly(error: { code?: string; message: string }): Error {
   // Mensagens levantadas pelos triggers do banco chegam em message
   const m = error.message ?? ''
+  if (error.code === '42501' || m.includes('row-level security'))
+    return new Error('Seu período de acesso terminou — ative sua assinatura para continuar')
   if (m.includes('cancelamento')) return new Error('Informe o motivo do cancelamento')
   if (m.includes('pagamentos antes'))
     return new Error('Cancele os pagamentos deste empréstimo antes de cancelá-lo')

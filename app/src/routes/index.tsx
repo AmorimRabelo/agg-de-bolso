@@ -15,6 +15,9 @@ import { LoansPage } from '../features/loans/LoansPage'
 import { LoanFormPage } from '../features/loans/LoanFormPage'
 import { LoanDetailPage } from '../features/loans/LoanDetailPage'
 import { ReportsPage } from '../features/reports/ReportsPage'
+import { SubscriptionGate } from '../features/subscription/SubscriptionGate'
+import { SubscriptionPage } from '../features/subscription/SubscriptionPage'
+import { AdminPage } from '../features/subscription/AdminPage'
 import { AppLayout } from './AppLayout'
 import { Splash } from '../shared/components/ui'
 
@@ -73,7 +76,7 @@ function Protected({ children }: { children: React.ReactNode }) {
   if (loading) return <Splash />
   if (recovery) return <Navigate to="/nova-senha" replace />
   if (!session) return <Navigate to="/entrar" replace />
-  return <>{children}</>
+  return <SubscriptionGate>{children}</SubscriptionGate>
 }
 
 function GuestOnly({ children }: { children: React.ReactNode }) {
@@ -117,6 +120,8 @@ function RouterTree() {
           <Route path="/emprestimos/:id" element={<LoanDetailPage />} />
           <Route path="/relatorios" element={<ReportsPage />} />
           <Route path="/ajustes" element={<SettingsPage />} />
+          <Route path="/assinatura" element={<SubscriptionPage />} />
+          <Route path="/admin" element={<AdminPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

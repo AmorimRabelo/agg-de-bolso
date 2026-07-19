@@ -3,6 +3,8 @@ import type { Client, ClientInput, ClientStats } from './types'
 
 /** Traduz erros do banco para mensagens amigáveis. */
 function friendly(error: { code?: string; message: string }): Error {
+  if (error.code === '42501' || (error.message ?? '').includes('row-level security'))
+    return new Error('Seu período de acesso terminou — ative sua assinatura para continuar')
   if (error.code === '23505')
     return new Error('Já existe um cliente com este CPF/CNPJ')
   if (error.code === '23503')

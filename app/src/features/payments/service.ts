@@ -3,6 +3,8 @@ import type { Payment, PaymentInput } from './types'
 
 function friendly(error: { code?: string; message: string }): Error {
   const m = error.message ?? ''
+  if (error.code === '42501' || m.includes('row-level security'))
+    return new Error('Seu período de acesso terminou — ative sua assinatura para continuar')
   if (m.includes('excede o principal pendente da parcela'))
     return new Error('O principal informado é maior que o pendente desta parcela')
   if (m.includes('excede o principal'))

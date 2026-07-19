@@ -43,7 +43,12 @@
       "Bash(node \"C:\\\\Users\\\\MARCUS~1.RAB\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\D--Novo-Volume--G--00--Projeto-S-Mademan-3-00---Agg-de-bolso\\\\9bd58baf-7594-428c-b65b-19f225aeee3b\\\\scratchpad\\\\test-parcelas.mjs\")",
       "PowerShell(Stop-Process -Id 22136 -Force -Confirm:$false)",
       "PowerShell(\"processo encerrado\")",
-      "Bash(curl -s -o /dev/null -w \"site: HTTP %{http_code}\\\\n\" \"https://amorimrabelo.github.io/agg-de-bolso/\")"
+      "Bash(curl -s -o /dev/null -w \"site: HTTP %{http_code}\\\\n\" \"https://amorimrabelo.github.io/agg-de-bolso/\")",
+      "PowerShell(\"SQL da Fase 2 copiado e editor aberto\")",
+      "PowerShell(\"SQL atualizado com os 3 s�cios e copiado novamente\")",
+      "Bash(node \"C:\\\\Users\\\\MARCUS~1.RAB\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\D--Novo-Volume--G--00---Projeto-S-Mademan-3-00---Agg-de-bolso\\\\9bd58baf-7594-428c-b65b-19f225aeee3b\\\\scratchpad\\\\test-assinaturas.mjs\")",
+      "Bash(cat > *)",
+      "PowerShell(\"grant copiado\")"
     ]
   }
 }

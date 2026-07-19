@@ -6,7 +6,27 @@ import { Card } from '../../shared/components/ui'
 import { useAuth } from '../auth/useAuth'
 import type { Receivable } from '../loans/types'
 import { useSettings } from '../settings/hooks'
+import { hasAccess, trialDaysLeft } from '../subscription/service'
+import { useIsAdmin, useSubscription } from '../subscription/hooks'
 import { useDashboardStats, useLate, useRecentPayments, useUpcoming } from './hooks'
+
+function TrialBanner() {
+  const navigate = useNavigate()
+  const { data: sub } = useSubscription()
+  const { data: isAdmin } = useIsAdmin()
+  if (isAdmin || !sub || sub.status !== 'trial' || !hasAccess(sub)) return null
+  const days = trialDaysLeft(sub)
+  return (
+    <button
+      onClick={() => navigate('/assinatura')}
+      className={`mb-3 w-full rounded-2xl px-4 py-3 text-left text-sm font-semibold
+        ${days <= 3 ? 'bg-amber-100 text-amber-800' : 'bg-sky-100 text-sky-800'}`}
+    >
+      🎁 Teste grátis: {days} dia{days === 1 ? '' : 's'} restante{days === 1 ? '' : 's'} —
+      toque para ver os planos
+    </button>
+  )
+}
 
 function ReceivableRow({ item }: { item: Receivable }) {
   const navigate = useNavigate()
@@ -83,6 +103,7 @@ export function HomePage() {
       </header>
 
       <div className="-mt-8 px-5 pb-6">
+        <TrialBanner />
         {/* contadores de situação */}
         <div className="grid grid-cols-3 gap-3">
           {[
