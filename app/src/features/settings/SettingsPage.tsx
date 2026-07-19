@@ -4,6 +4,7 @@ import { supabase } from '../../core/supabase'
 import { useAuth } from '../auth/useAuth'
 import { Button, Card, Input, useToast } from '../../shared/components/ui'
 import { useIsAdmin } from '../subscription/hooks'
+import { PushSettingsCard } from '../notifications/PushSettingsCard'
 import { useSaveSettings, useSettings } from './hooks'
 
 export function SettingsPage() {
@@ -60,6 +61,8 @@ export function SettingsPage() {
         <p className="text-sm text-ink/50">Conectado como</p>
         <p className="font-semibold">{session?.user.email}</p>
       </Card>
+
+      <PushSettingsCard />
 
       <Link to="/assinatura">
         <Card className="mt-3 flex items-center justify-between">

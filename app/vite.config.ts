@@ -9,6 +9,10 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
+      // service worker próprio (src/sw.ts): cache + notificações push
+      strategies: 'injectManifest',
+      srcDir: 'src',
+      filename: 'sw.ts',
       includeAssets: ['favicon.svg'],
       manifest: {
         name: 'Agg de Bolso',
