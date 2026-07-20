@@ -152,7 +152,7 @@ export function SettingsPage() {
         </Button>
       </div>
 
-      <p className="mt-6 text-center text-xs text-ink/30">Agg de Bolso · versão 1.0</p>
+      <p className="mt-6 text-center text-xs text-ink/30">EmprestaJá · versão 2.0</p>
     </div>
   )
 }

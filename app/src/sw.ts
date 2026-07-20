@@ -1,5 +1,5 @@
 /// <reference lib="webworker" />
-// Service worker do Agg de Bolso:
+// Service worker do EmprestaJá:
 // - cache/atualização automática do app (Workbox)
 // - recebimento de notificações push (mesmo com o app fechado)
 import { cleanupOutdatedCaches, precacheAndRoute } from 'workbox-precaching'
@@ -22,7 +22,7 @@ self.addEventListener('push', (event) => {
     data = { body: event.data.text() }
   }
   event.waitUntil(
-    self.registration.showNotification(data.title ?? 'Agg de Bolso', {
+    self.registration.showNotification(data.title ?? 'EmprestaJá', {
       body: data.body ?? '',
       icon: './pwa-192x192.png',
       badge: './pwa-192x192.png',

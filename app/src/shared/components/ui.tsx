@@ -103,7 +103,7 @@ export function Logo({ size = 48, light = false }: { size?: number; light?: bool
       className={`flex items-center justify-center rounded-2xl font-extrabold
         ${light ? 'bg-brand-400/20 text-brand-400' : 'bg-brand-700 text-white'}`}
     >
-      <span style={{ fontSize: size * 0.42 }}>A$</span>
+      <span style={{ fontSize: size * 0.42 }}>E$</span>
     </div>
   )
 }

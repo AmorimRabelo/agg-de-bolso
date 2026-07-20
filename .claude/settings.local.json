@@ -50,7 +50,17 @@
       "Bash(cat > *)",
       "PowerShell(\"grant copiado\")",
       "Bash(cd /tmp)",
-      "Bash(npx --yes web-push generate-vapid-keys --json)"
+      "Bash(npx --yes web-push generate-vapid-keys --json)",
+      "PowerShell(\"SQL 008 copiado e editor aberto\")",
+      "PowerShell(Start-Process \"https://supabase.com/dashboard/project/pndcwchwndybmojbywpx/functions\")",
+      "PowerShell(\"c�digo do rob� copiado e p�gina de Edge Functions aberta\")",
+      "PowerShell(\"c�digo copiado novamente\")",
+      "Bash(curl -s -X POST \"https://pndcwchwndybmojbywpx.supabase.co/functions/v1/send-overdue-push\" -H \"Content-Type: application/json\" -w \"\\\\nHTTP %{http_code}\\\\n\")",
+      "PowerShell(Start-Process notepad \"D:\\\\Novo Volume \\(G\\)\\\\00 -Projeto S Mademan 3\\\\00 - Agg de bolso\\\\SEGREDOS-PUSH.txt\")",
+      "PowerShell(Start-Process \"https://supabase.com/dashboard/project/pndcwchwndybmojbywpx/functions/secrets\")",
+      "PowerShell(\"arquivo de segredos e p�gina de Secrets abertos\")",
+      "Bash(git add *)",
+      "Bash(git commit -q -m 'Agendamento diario do push de cobrancas \\(pg_cron, modelo sem segredo\\) *)"
     ]
   }
 }

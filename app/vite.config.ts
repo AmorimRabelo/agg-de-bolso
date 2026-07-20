@@ -15,8 +15,8 @@ export default defineConfig({
       filename: 'sw.ts',
       includeAssets: ['favicon.svg'],
       manifest: {
-        name: 'Agg de Bolso',
-        short_name: 'Agg de Bolso',
+        name: 'EmprestaJá',
+        short_name: 'EmprestaJá',
         description: 'Sua carteira de empréstimos, no bolso',
         lang: 'pt-BR',
         display: 'standalone',

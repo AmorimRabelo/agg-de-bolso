@@ -16,7 +16,7 @@ export function AuthLayout({
       <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col px-6 pb-10">
         <div className="flex flex-col items-center gap-3 pb-8 pt-16">
           <Logo size={64} light />
-          <h1 className="text-2xl font-extrabold text-white">Agg de Bolso</h1>
+          <h1 className="text-2xl font-extrabold text-white">EmprestaJá</h1>
           <p className="text-sm text-brand-200">Sua carteira de empréstimos, no bolso.</p>
         </div>
         <div className="anim-fade-up rounded-3xl bg-white p-6 shadow-2xl">
