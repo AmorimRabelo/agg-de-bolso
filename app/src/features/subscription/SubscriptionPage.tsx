@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { formatDate } from '../../core/format'
 import { Card } from '../../shared/components/ui'
+import { ActivationCard } from './ActivationCard'
 import { hasAccess, trialDaysLeft } from './service'
 import { useIsAdmin, useSubscription } from './hooks'
 
@@ -75,14 +76,9 @@ export function SubscriptionPage() {
               </ul>
             </Card>
 
-            <Card className="mt-3 !bg-brand-50">
-              <p className="text-sm font-semibold">Como ativar</p>
-              <p className="mt-1 text-sm text-ink/70">
-                O pagamento pelo app (PIX/cartão) está chegando. Por enquanto, a
-                ativação é feita pelo nosso atendimento — entre em contato para
-                liberar na hora.
-              </p>
-            </Card>
+            <div className="mt-3">
+              <ActivationCard />
+            </div>
           </>
         )
       )}

@@ -61,7 +61,8 @@
       "PowerShell(\"arquivo de segredos e p�gina de Secrets abertos\")",
       "Bash(git add *)",
       "Bash(git commit -q -m 'Agendamento diario do push de cobrancas \\(pg_cron, modelo sem segredo\\) *)",
-      "Bash(curl -s \"https://amorimrabelo.github.io/agg-de-bolso/\")"
+      "Bash(curl -s \"https://amorimrabelo.github.io/agg-de-bolso/\")",
+      "Bash(git commit --allow-empty -q -m 'Redispara publicacao \\(falha transitoria do Pages\\) *)"
     ]
   }
 }

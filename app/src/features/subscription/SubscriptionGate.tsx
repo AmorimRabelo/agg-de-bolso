@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { supabase } from '../../core/supabase'
 import { Button, Card, Logo } from '../../shared/components/ui'
+import { ActivationCard } from './ActivationCard'
 import { hasAccess } from './service'
 import { useIsAdmin, useSubscription } from './hooks'
 
@@ -49,14 +50,7 @@ export function SubscriptionGate({ children }: { children: ReactNode }) {
         </ul>
       </Card>
 
-      <Card className="!bg-brand-50">
-        <p className="text-sm font-semibold">Como ativar</p>
-        <p className="mt-1 text-sm text-ink/70">
-          O pagamento pelo app (PIX/cartão) está chegando. Por enquanto, a
-          ativação é feita pelo nosso atendimento — entre em contato para
-          liberar seu acesso na hora.
-        </p>
-      </Card>
+      <ActivationCard />
 
       <div className="flex flex-col gap-2">
         <Button variant="ghost" onClick={() => setReadOnly(true)}>
