@@ -19,6 +19,7 @@ import { SubscriptionGate } from '../features/subscription/SubscriptionGate'
 import { SubscriptionPage } from '../features/subscription/SubscriptionPage'
 import { AdminPage } from '../features/subscription/AdminPage'
 import { NotificationsPage } from '../features/notifications/NotificationsPage'
+import { PrivacyPage, TermsPage } from '../features/legal/LegalPages'
 import { AppLayout } from './AppLayout'
 import { Splash } from '../shared/components/ui'
 
@@ -104,6 +105,8 @@ function RouterTree() {
         <Route path="/criar-conta" element={<GuestOnly><SignupPage /></GuestOnly>} />
         <Route path="/recuperar-senha" element={<GuestOnly><RecoverPage /></GuestOnly>} />
         <Route path="/nova-senha" element={<NewPasswordPage />} />
+        <Route path="/termos" element={<TermsPage />} />
+        <Route path="/privacidade" element={<PrivacyPage />} />
         <Route
           element={
             <Protected>

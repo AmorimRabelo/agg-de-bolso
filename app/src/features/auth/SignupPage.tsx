@@ -103,6 +103,16 @@ export function SignupPage() {
           onChange={(e) => setConfirm(e.target.value)}
           required
         />
+        <p className="text-center text-xs text-ink/50">
+          Ao criar a conta, você concorda com os{' '}
+          <Link to="/termos" className="font-semibold text-brand-700 underline">
+            Termos de Uso
+          </Link>{' '}
+          e a{' '}
+          <Link to="/privacidade" className="font-semibold text-brand-700 underline">
+            Política de Privacidade
+          </Link>
+        </p>
         <Button type="submit" loading={loading}>
           Criar conta
         </Button>

@@ -152,7 +152,12 @@ export function SettingsPage() {
         </Button>
       </div>
 
-      <p className="mt-6 text-center text-xs text-ink/30">EmprestaJá · versão 2.0</p>
+      <p className="mt-6 text-center text-xs text-ink/40">
+        <Link to="/termos" className="underline">Termos de Uso</Link>
+        {' · '}
+        <Link to="/privacidade" className="underline">Privacidade</Link>
+      </p>
+      <p className="mt-2 text-center text-xs text-ink/30">EmprestaJá · versão 2.0</p>
     </div>
   )
 }
